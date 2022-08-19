@@ -23,12 +23,7 @@
 
     import { onMount } from 'svelte';
 
-    export let todos: Todo[] = [
-    {
-        created_at: new Date(),
-        text: "bruh",
-        done: false
-    }];
+    export let todos: Todo[] = [];
 
     onMount(async () => {
         const res = await fetch("/todos.json");
