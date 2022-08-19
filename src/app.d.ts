@@ -8,3 +8,9 @@ declare namespace App {
 	// interface PublicEnv {}
 	// interface Session {}
 }
+
+type Todo = {
+	created_at: Date,
+	text: string,
+	done: boolean
+}
