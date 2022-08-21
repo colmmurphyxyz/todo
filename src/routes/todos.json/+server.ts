@@ -10,9 +10,12 @@ export async function POST(requestEvent: RequestEvent) {
 }
 
 export async function DELETE(requestEvent: RequestEvent) {
-    const url = requestEvent.url;
+    return api(requestEvent);
+}
 
-    return new Response("200", {
-        status: 200
+export async function PATCH(requestEvent: RequestEvent) {
+    let t = (await requestEvent.request.formData().then(formData => formData.get("text")))
+    return api(requestEvent, {
+        text: t
     })
 }

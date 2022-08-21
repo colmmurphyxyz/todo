@@ -2,7 +2,7 @@ import type { RequestEvent } from "@sveltejs/kit";
 
 let todos: Todo[] = [];
 
-export const api = async (requestEvent: RequestEvent) => {
+export const api = async (requestEvent: RequestEvent, data?: Record<string, string>) => {
     let body = "";
     let status = 500;
 
