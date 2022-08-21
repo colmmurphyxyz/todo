@@ -12,26 +12,46 @@ export const api = async (requestEvent: RequestEvent, data?: Record<string, stri
             status = 200;
             break;
         case "POST":
-            if (requestEvent.url.searchParams.get("method")?.toUpperCase() === "DELETE") {
-                console.log("deleting");
-                const foo = todos.filter(todo => todo.uid != requestEvent.url.searchParams.get("uid"));
-                todos = foo;
-                status = 200;
-            } else {
-                await requestEvent.request.formData().then((data) => {
+            const method = requestEvent.url.searchParams.get("method")?.toUpperCase();
+            switch (method) {
+                case "DELETE":
+                    const foo = todos.filter(todo => todo.uid != requestEvent.url.searchParams.get("uid"));
+                    todos = foo;
+                    status = 200;
+                    break;
+                case "PATCH":
+                    todos = todos.map(todo => {
+                        if (todo.uid === requestEvent.url.searchParams.get("uid")) {
+                            todo.text = data!.get("text") as string;
+                        }
+                        return todo;
+                    })
+                    status = 200;
+                    break;
+                default:    // case "POST"
+                console.log("posting");
                     todos.push({
                         uid: `${Date.now()}`,
                         created_at: new Date(),
-                        text: data.get("text") as string,
+                        text: data!.get("text") as string,
                         done: false
                     })
                     body = JSON.stringify(data);
                     status = 201
-                }).catch((error) => {
-                    console.log(`error occured: ${error}`);
-                })
+                    // await requestEvent.request.formData().then((data) => {
+                        // todos.push({
+                        //     uid: `${Date.now()}`,
+                        //     created_at: new Date(),
+                        //     text: data.get("text") as string,
+                        //     done: false
+                        // })
+                        // body = JSON.stringify(data);
+                        // status = 201
+                    // }).catch((error) => {
+                    //     console.log(`error occured: ${error}`);
+                    // })
+                    break;
             }
-        
             return new Response("", {
                 status: 303,
                 headers: {
@@ -47,6 +67,15 @@ export const api = async (requestEvent: RequestEvent, data?: Record<string, stri
                     location: "/"
                 }
             });
+            break;
+        case "PATCH":
+            todos = todos.map(todo => {
+                if (todo.uid === requestEvent.url.searchParams.get("uid")) {
+                    todo.text = data!.text as string;
+                }
+                return todo;
+            })
+            status = 200;
             break;
 
         default:

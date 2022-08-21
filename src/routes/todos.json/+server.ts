@@ -6,7 +6,9 @@ export const GET: RequestHandler = (requestEvent: RequestEvent) => {
 };
 
 export async function POST(requestEvent: RequestEvent) {
-    return api(requestEvent);
+    let formData;
+    await requestEvent.request.formData().then(data => formData = data)
+    return api(requestEvent, formData);
 }
 
 export async function DELETE(requestEvent: RequestEvent) {
@@ -14,8 +16,7 @@ export async function DELETE(requestEvent: RequestEvent) {
 }
 
 export async function PATCH(requestEvent: RequestEvent) {
-    let t = (await requestEvent.request.formData().then(formData => formData.get("text")))
-    return api(requestEvent, {
-        text: t
-    })
+    let formData;
+    await requestEvent.request.formData().then(data => formData = data)
+    return api(requestEvent, formData);
 }
