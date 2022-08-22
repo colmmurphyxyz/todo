@@ -16,7 +16,11 @@ export async function DELETE(requestEvent: RequestEvent) {
 }
 
 export async function PATCH(requestEvent: RequestEvent) {
-    let formData;
+    let formData: FormData;
     await requestEvent.request.formData().then(data => formData = data)
-    return api(requestEvent, formData);
+    let data: Record<string, string> = {
+        text: formData!.get("text") as string,
+        done: formData!.get("done") as string
+    }
+    return api(requestEvent, data);
 }

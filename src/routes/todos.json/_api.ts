@@ -20,16 +20,26 @@ export const api = async (requestEvent: RequestEvent, data?: Record<string, stri
                     status = 200;
                     break;
                 case "PATCH":
-                    todos = todos.map(todo => {
-                        if (todo.uid === requestEvent.url.searchParams.get("uid")) {
-                            todo.text = data!.get("text") as string;
-                        }
-                        return todo;
-                    })
+                    if (data!.get("text")) {
+                        todos = todos.map(todo => {
+                            if (todo.uid === requestEvent.url.searchParams.get("uid")) {
+                                todo.text = data!.get("text") as string;
+                            }
+                            return todo;
+                        })
+                    } else {
+                        console.log("patching done")
+                        todos = todos.map(todo => {
+                            if (todo.uid === requestEvent.url.searchParams.get("uid")) {
+                                todo.done = !todo.done;
+                            }
+                            return todo
+                        })
+                    }
+
                     status = 200;
                     break;
                 default:    // case "POST"
-                console.log("posting");
                     todos.push({
                         uid: `${Date.now()}`,
                         created_at: new Date(),
